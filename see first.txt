@@ -1,0 +1,261 @@
+You are given a page with a clock. Your task is to implement logic for buttons to increment and decrement the hours and minutes.
+
+The time should be displayed in HH:MM 24-hour format. For example, 23:59, 08:00, 07:32.
+
+The initial state of the clock should be 00:00.
+
+Actions should be cycled; if you have 23:58 on the clock and press up for hours, the resulting time should be 00:58.
+
+Minutes and hours should be changed separately.
+
+
+const ClockUpdater = () => {
+
+  const [hours, setHours] = React.useState('00');
+  const [minutes, setMinutes] = React.useState('00');
+
+     let minute = parseInt(minutes, 10);
+      let hour = parseInt(hours, 10);
+  function handleHoursUpButtonClick() {
+    //TODO: implement this
+    if(hour === 23){
+        hour = 0
+    }else{
+        hour ++
+    }
+    if(hour < 10){
+        setHours(`0${hour}`)
+    }else{
+        setHours(`${hour}`)
+    }
+    if(minute < 10){
+        setMinutes(`0${minute}`)
+    } else{
+        setMinutes(`${minute}`)
+    }
+    
+  }
+
+  function handleHoursDownButtonClick() {
+    //TODO: implement this
+    if(hour === 0){
+        hour = 23
+    }else{
+        hour --
+    }
+    if(hour < 10){
+        setHours(`0${hour}`)
+    }else{
+        setHours(`${hour}`)
+    }
+   if(minute < 10){
+        setMinutes(`0${minute}`)
+    } else{
+        setMinutes(`${minute}`)
+    }
+    
+  }
+
+  function handleMinutesUpButtonClick() {
+    //TODO: implement this
+   if(minute === 59){
+       minute = 0;
+    
+   } else{
+       minute += 1;
+   }
+    if(minute < 10){
+        setMinutes(`0${minute}`)
+    } else{
+        setMinutes(`${minute}`)
+    }
+    if(hour < 10){
+        setHours(`0${hour}`)
+    }else{
+        setHours(`${hour}`)
+    }
+    
+  }
+
+  function handleMinutesDownButtonClick() {
+    //TODO: implement this
+    if(minute === 0){
+       minute = 59;
+   } else{
+       minute --;
+   }
+    if(minute < 10){
+        setMinutes(`0${minute}`)
+    } else{
+        setMinutes(`${minute}`)
+    }
+    if(hour < 10){
+        setHours(`0${hour}`)
+    }else{
+        setHours(`${hour}`)
+    }
+    
+  }
+
+  return (
+    <div id="ClockUpdater" class="container">
+      <div class="row">
+        <button
+          id="hours-up-button"
+          onClick={ handleHoursUpButtonClick}
+          class="btn btn-outline-primary col"
+        >&uarr;</button>
+
+        <button
+          id="minutes-up-button"
+          class="btn btn-outline-primary col"
+          onClick={handleMinutesUpButtonClick}
+        >&uarr;</button>
+      </div>
+
+      <div class="row">
+        <div id="clock" class="badge badge-primary col">
+          {`${hours}:${minutes}`}
+        </div>
+      </div>
+
+      <div class="row">
+        <button
+          id="hours-down-button"
+          onClick={handleHoursDownButtonClick}
+          class="btn btn-outline-primary col"
+        >&darr;</button>
+
+        <button
+          id="minutes-down-button"
+          class="btn btn-outline-primary col"
+          onClick={handleMinutesDownButtonClick}
+        >&darr;</button>
+      </div>
+    </div>
+  );
+};
+
+ReactDOM.render(
+  <ClockUpdater />,
+  document.getElementById('clock-updater')
+);
+
+
+
+
+Implement a progress bar using React. You are not allowed to modify HTML tab, consider modifying only JSX and CSS tabs. The task also contains a bunch of read-only tests, so consider this as a TDD task, where you need to implement the solution to pass the prewritten tests.
+
+Note: in order to use React hooks you should not import anything, just use the React global, e.g. React.useState.
+
+Functional requirements
+Create a form with four fields related to a document that is being submitted. There should be a progress indicator at the top that is moving forward as you fill each field: the indicator should automatically set the state of the progress bar based on how many inputs have a valid value.
+
+The four fields in the document should be the following:
+
+An input field for the document name with id = "documentName" (the id is used in tests, so it's important to use this exact identifier);
+A dropdown for the document type with id = "documentType".
+The dropdown should have three options: empty value (initial state), 'Plain', and 'PDF'.
+Usage example: <option value="Plain">Plain</option>.
+A dropdown for the document category with id = "category".
+The dropdown should have four options with the following values: empty value (initial state), 'Audit', 'Application', and 'Other' respectively.
+Usage example: <option value="Audit">Audit</option>.
+An input field for the sender email with id = "email"
+Here are the functional requirements for the fields validation:
+
+The value of any dropdown field is considered valid if it is not empty;
+The document name is considered valid if its length is between 2 and 32 characters, inclusive;
+The sender email is considered valid if all the requirements below are satisfied:
+It contains a string that is at most 128 characters long;
+The string matches the format <username>@<domain>, where both username and domain can contain only lowercase English letters, digits, and periods (.);
+Additionally, domain should contain at least one period character (.);
+Both username and domain can't have consecutive periods (.) in them.
+The state of the progress bar indicator should be the following:
+
+It should be at 0% if all fields values are empty like they are at the initial state;
+It should be at 25% if only one field has a valid value;
+It should be at 50% for two filled fields;
+75% for three valid fields
+100% if all of the fields have values selected and all the values are valid.
+Style requirements
+The style requirements for progress bar are the following:
+
+It should be implemented as two divs:
+div with className = "form-progress-bar-wrapper" of grey color ( #e8ebee) with full screen width
+div with className = "form-progress-bar" of blue color ( #007bff) with width, reflecting the number of valid values
+The width of the progress bar should be indicating the current filling values: 0%, 25%,50%, 75%, and 100% of the screen width respectively.
+Feel free to design the progress bar page as you wish, there are no additional requirements for the styling except the ones that are present above.
+
+
+const App = () => {
+    
+    const [progressLevel, setProgressLevel] = React.useState(0);
+    const [name, setName] = React.useState('');
+    const [category, setCategory] = React.useState('');
+    const [type, setType] = React.useState('');
+    const [email, setEmail] = React.useState('');
+    
+    const onInputChange = (e) =>{
+        setName(e.target.value);
+    }
+    
+    const onEmailChange = e => {
+        setEmail(e.target.value)
+    }
+    
+    const onSelectCategoryChange = e =>{
+        setCategory(e.target.value)
+    }
+    
+    const onSelectTypeChange = e =>{
+        setType(e.target.value)
+    }
+    
+    
+    const progressBar = (e) => {
+         if(name.length >= 2 && name.length <= 32 ){
+            setProgressLevel(progressLevel => progressLevel +25)
+        }
+        
+        if( category.length > 0){
+            setProgressLevel(progressLevel => progressLevel +25)
+        }
+        
+        if( type.length > 0){
+            setProgressLevel(progressLevel => progressLevel +25)
+        }
+	 if( email.length > 0){
+            setProgressLevel(progressLevel => progressLevel +25)
+        }
+        e.target.value = progressLevel;
+        
+    }
+
+  return (
+      <div>
+      <div className="form-progress-bar"><progress  value={progressLevel} max="100" onChange={progressBar}></progress></div>
+	<div className='form-progress-bar-wrapper'>
+    <form >
+        <input id="documentName" value={name} onChange={onInputChange} type="text" />
+        <select id="documentType" onChange={onSelectTypeChange}>
+            <option value=""></option>
+            <option value="Plain">Plain</option>
+            <option value="PDF">PDF</option>
+        </select>
+        <select id="category" onChange={onSelectCategoryChange} >
+            <option value=""></option>
+            <option value="Audit">Audit</option>
+            <option value="Application">Application</option>
+            <option value="Other">Other</option>
+        </select>
+        <input id="email" type="email" value={email} onChange={onEmailChange}/>
+    </form>
+	</div>
+    </div>
+  );
+}
+
+ReactDOM.render(
+  <App />,
+  document.getElementById('app')
+);
